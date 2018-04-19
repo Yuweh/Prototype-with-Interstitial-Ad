@@ -14,7 +14,8 @@ import GoogleMobileAds
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    //for SDK: ca-app-pub-2753687006998878~2058825665
+    //for Banner: ca-app-pub-2753687006998878/5151306133
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         

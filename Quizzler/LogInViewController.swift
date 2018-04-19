@@ -9,9 +9,12 @@
 import UIKit
 import Firebase
 import SVProgressHUD
+import GoogleMobileAds
 
 
-class LogInViewController: UIViewController {
+class LogInViewController: UIViewController, GADInterstitialDelegate {
+    
+    var interstitialAd : GADInterstitial!
     
     //Textfields pre-linked with IBOutlets
     @IBOutlet var emailTextfield: UITextField!
@@ -20,6 +23,10 @@ class LogInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden = false
+        self.interstitialAd = GADInterstitial(adUnitID: "ca-app-pub-3940256099942544/4411468910")
+        let request = GADRequest()
+        self.interstitialAd.load(request)
+        self.interstitialAd = reloadInterstitialAd()
         
     }
     
@@ -27,9 +34,21 @@ class LogInViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    func reloadInterstitialAd() -> GADInterstitial {
+        let interstitial = GADInterstitial(adUnitID: "ca-app-pub-3940256099942544/4411468910")
+        interstitial.delegate = self
+        interstitial.load(GADRequest())
+        return interstitial
+    }
+    
+    func interstitialDidDismissScreen(ad: GADInterstitial!) {
+        self.interstitialAd = reloadInterstitialAd()
+    }
     
     @IBAction func logInPressed(_ sender: AnyObject) {
         
+        if self.interstitialAd.isReady {
+            self.interstitialAd.present(fromRootViewController: self)
         SVProgressHUD.show()
         //TODO: Log in the user
         Auth.auth().signIn(withEmail: emailTextfield.text!, password: passwordTextfield.text!) { (user, error) in
@@ -42,8 +61,12 @@ class LogInViewController: UIViewController {
                 print("Login successful!")
                 SVProgressHUD.dismiss()
                 ProgressHUD.showSuccess("Login successful!")
+                
                 self.performSegue(withIdentifier: "goToMenu1", sender: self)
             }
+            }
+        } else {
+            ProgressHUD.showError("Ad not ready")
         }
     }
     
