@@ -13,5 +13,6 @@ target 'Quizzler' do
     pod "SVProgressHUD"
     pod "Fabric"
     pod "Crashlytics"
+    pod "Google-Mobile-Ads-SDK"
 
 end
